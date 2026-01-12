@@ -12,6 +12,7 @@ number as the key and list of expense, category and date(default date is of toda
 #accessing the current date
 from datetime import date
 import datetime
+import time
 # today = str(date.today()).split('-')
 # print(today)
 currentMonth = date.today().strftime('%m')
@@ -74,6 +75,7 @@ print('--- Expense Tracker: One stop solution to track and manage all your expen
 print()
 
 currentExpenseList = allExpenses[currentMonthDataKey]
+
 DontExit = True
 while DontExit:
     
@@ -87,7 +89,7 @@ while DontExit:
     print('5. Exit')
     print()
 
-    userinp = input('Enter (1/2/3/4): ')
+    userinp = input('Enter (1/2/3/4/5): ')
     print()
     match userinp:
         case '1':
@@ -162,7 +164,7 @@ while DontExit:
                     else:
                         print('Enter Valid date in correct format dd.mm.yyyy. Try again')
                 
-        case '2':
+        case '2' :
             print('--- Enter the serial number to remove or 0 to exit ---')
             NotDone = True
             while NotDone:
@@ -179,6 +181,15 @@ while DontExit:
                 
                 except ValueError:
                     print('Enter a valid input. Try again')
+
+        case '4':
+            print("--- Your This month's Expenses ---""")
+        
+
+        case '5':
+            print("--- Saving Your Data ---")
+            time.sleep(5)
+            DontExit = False
 
 
 
