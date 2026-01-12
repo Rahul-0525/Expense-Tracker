@@ -57,6 +57,9 @@ class ExpenseList():
             print('\nData removed')
         except KeyError:
             print('Enter a valid input. Try again')
+    
+    def replace(self,serialNo:int,amt:float, category:str, datae):
+        """takes the serial number and the new data and replace the data entry of that serial number"""
 
     def display(self):
         """Display all the _expenses in pretty manner"""
@@ -196,6 +199,97 @@ while DontExit:
                 
                 except ValueError:
                     print('Enter a valid input. Try again')
+
+        case '3':
+            print('--- Enter the serial number to edit or 0 to exit ---')
+            NotDone = True
+            while NotDone:
+                try: 
+                    serialNum = int(input(f'Enter Serial Number(1-{currentExpenseList.getLastsno()-1}):'))
+                    if serialNum >= 1 and serialNum <= currentExpenseList.getLastsno():
+                            NotDone = True
+                            while NotDone:
+                                try:
+                                    amt = float(input("Enter the amount of the Expense: "))
+                                    if amt<0:
+                                        raise NegativeSpend(amt)
+                                    NotDone = False
+                                except ValueError:
+                                    print('Enter a valid input. Try again')
+                                except NegativeSpend as err:
+                                    print(err)
+
+                            NotDone = True
+                            while NotDone:
+                                categories = [
+                                                "Housing",
+                                                "Utilities",
+                                                "Food & Dining",
+                                                "Transport",
+                                                "Health",
+                                                "Entertainment",
+                                                "Shopping",
+                                                "Debt & Loans",
+                                                "Education",
+                                                "Gifts & Donations",
+                                                "Insurance",
+                                                "Miscellaneous"
+                                            ]
+                                print('\n--- Choose the Category of the expense ---')
+                                print('1. Housing: Rent/Mortgage, property tax, home insurance.')
+                                print('2. Utilities: Electricity, water, gas, internet, phone bill.')
+                                print('3. Food & Dining: Groceries, restaurants, coffee shops, takeout.')
+                                print('4. Transport: Fuel, public transit, car maintenance, Uber/Lyft.')
+                                print('5. Health: Health insurance, pharmacy, doctor visits, gym.')
+                                print('6. Entertainment: Streaming services, movies, hobbies, gaming.')
+                                print('7. Shopping: Clothes, electronics, home decor, personal care.')
+                                print('8. Debt & Loans: Credit card payments, student loans, personal loans.')
+                                print('9. Education: Books, online courses, tuition, certifications.')
+                                print('10. Gifts & Donations: Birthdays, holiday gifts, charity, tithes.')
+                                print('11. Insurance: Car, life, or disability insurance (if not in Housing).')
+                                print('12. Miscellaneous: Emergency costs, repairs, or one-off expenses.\n')
+
+                                cat = (input("Enter the Category of the Expenses: "))
+                                if cat.strip() in list(map(str,list(range(1,13)))):
+                                    category = categories[int(cat)-1]
+                                    NotDone = False
+                                else:
+                                    print("Enter a valid input. Try again.")
+
+                            
+
+                            def isdatecorrect(date:str) -> bool:
+                                try:
+                                    datetime.datetime.strptime(date, '%d.%m.%Y')
+                                    return True
+                                except ValueError:
+                                    return False
+                                
+                            NotDone = True   
+                            while NotDone:
+                                print('\n--- If the expense is of today Press Enter/ Otherwise Enter the date (dd.mm.yyyy) ---')
+                                ofToday = input('Press Enter/ dd.mm.yyyy: ')
+                                if not ofToday:
+                                    currentExpenseList.replace(serialNum,amt,category)
+                                    NotDone = False
+                                
+                                else:
+                                    if isdatecorrect(ofToday):
+                                        currentExpenseList.replace(serialNum,amt,category,ofToday)
+                                        NotDone = False
+                                    
+                                    else:
+                                        print('Enter Valid date in correct format dd.mm.yyyy. Try again')
+                                        NotDone = False
+                    elif serialNum == 0:
+                        print('Nothing changed.')
+                        NotDone = False
+                    else:
+                        raise ValueError('Invalid input')
+                
+                except ValueError:
+                    print('Enter a valid input. Try again')
+
 
         case '4':
             print("--- Your This month's Expenses ---""")
