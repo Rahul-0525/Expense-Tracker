@@ -24,6 +24,15 @@ currentDate = date.today().strftime('%d.%m.%Y')
 
 allExpenses = {} #store expense list month wise
 
+
+
+#definig specific exceptions for the system
+
+class NegativeSpend(Exception):
+    """Error shown when expense or spend input is negative"""
+    def __init__(self,amt):
+        super().__init__(f"Negative spending is not possible:{amt} Enter a valid input.")
+
 #defining ExpenseList and its all methods 
 
 class ExpenseList():
@@ -54,7 +63,10 @@ class ExpenseList():
         if self._expenses:
             print()
             for sno in self._expenses:
-                print(f"{sno}\t{self._expenses[sno][0]}\t{self._expenses[sno][1]}\t{self._expenses[sno][2]}\t")
+                print(f"{sno}".center(4," "),f"{self._expenses[sno][0]}".center(16,' '),
+                      f"{self._expenses[sno][2]}".center(16,' '),
+                      f"{self._expenses[sno][1]}".center(16,' '),sep="")
+                
             print()
         else:
                 print('\nNo Data\n')
@@ -97,10 +109,13 @@ while DontExit:
             while NotDone:
                 try:
                     amt = float(input("Enter the amount of the Expense: "))
+                    if amt<0:
+                        raise NegativeSpend(amt)
                     NotDone = False
                 except ValueError:
                     print('Enter a valid input. Try again')
-
+                except NegativeSpend as err:
+                    print(err)
 
             NotDone = True
             while NotDone:
