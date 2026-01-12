@@ -19,7 +19,7 @@ currentYear = date.today().strftime('%Y')
 currentDay = date.today().strftime('%d')
 
 currentDate = date.today().strftime('%d.%m.%Y')
-print(currentDate)
+# print(currentDate)
 
 allExpenses = {} #store expense list month wise
 
@@ -38,23 +38,28 @@ class ExpenseList():
         """Adds the details of expense in the expense list taking amt, cat and date as argument"""
         self._expenses[self.sno] = [amount, category,date]
         self.sno += 1
-        print('Expense Added')
+        print('\nExpense Added')
     
     def remove(self,serialNo:int):
         """Removes any of the expense with serial number as argument"""
         try:
             self._expenses.pop(serialNo)
-            print('Data removed')
+            print('\nData removed')
         except KeyError:
             print('Enter a valid input. Try again')
 
     def display(self):
         """Display all the _expenses in pretty manner"""
         if self._expenses:
+            print()
             for sno in self._expenses:
                 print(f"{sno}\t{self._expenses[sno][0]}\t{self._expenses[sno][1]}\t{self._expenses[sno][2]}\t")
+            print()
         else:
-                print('No Data')
+                print('\nNo Data\n')
+
+    def getLastsno(self) -> int:
+        return self.sno
 
 
 #this creates a new expense list object for each month if not exist already 
@@ -83,6 +88,7 @@ while DontExit:
     print()
 
     userinp = input('Enter (1/2/3/4): ')
+    print()
     match userinp:
         case '1':
             NotDone = True
@@ -142,7 +148,7 @@ while DontExit:
                 
             NotDone = True   
             while NotDone:
-                print('--- If the expense is of today Press Enter/ Otherwise Enter the date (dd.mm.yyyy) ---')
+                print('\n--- If the expense is of today Press Enter/ Otherwise Enter the date (dd.mm.yyyy) ---')
                 ofToday = input('Press Enter/ dd.mm.yyyy: ')
                 if not ofToday:
                     currentExpenseList.add(amt,category)
@@ -155,10 +161,24 @@ while DontExit:
                     
                     else:
                         print('Enter Valid date in correct format dd.mm.yyyy. Try again')
-                        
-            
-
-            
+                
+        case '2':
+            print('--- Enter the serial number to remove or 0 to exit ---')
+            NotDone = True
+            while NotDone:
+                try: 
+                    serialNum = int(input(f'Enter Serial Number(1-{currentExpenseList.getLastsno()-1}):'))
+                    if serialNum >= 1 and serialNum <= currentExpenseList.getLastsno():
+                        currentExpenseList.remove(serialNum)
+                        NotDone = False
+                    elif serialNum == 0:
+                        print('Nothing changed.')
+                        NotDone = False
+                    else:
+                        raise ValueError('Invalid input')
+                
+                except ValueError:
+                    print('Enter a valid input. Try again')
 
 
 
