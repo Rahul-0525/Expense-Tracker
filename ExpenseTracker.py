@@ -23,25 +23,9 @@ import json
 currentMonth = date.today().strftime('%m')
 currentYear = date.today().strftime('%Y')
 currentDay = date.today().strftime('%d')
-
 currentDate = date.today().strftime('%d.%m.%Y')
 # print(currentDate)
 
-#defining the function that handle the loading and saving of the allExpenses dictionary that stor all the month wise data
-
-def save():
-    with open('data.json','w') as file:
-        json.dump(allExpenses,file,indent=4)
-
-def load():
-    try:
-        with open('data.json', 'r') as file:
-            d = json.load(file)
-            return d
-    except Exception:
-        return {}
-
-allExpenses = load() #store expense list month wise
 
 
 
@@ -59,26 +43,32 @@ class ExpenseList():
     Defines and handle all the methods of the Expense list which represent expenses of a single month only
     '''
 
-    def __init__(self):
-        self._expenses = {}
-        self.sno = 1
+    def __init__(self,monthlist:dict):
+        self._expenses = monthlist
+        try:
+            self.sno = max(list(map(int,monthlist.keys())))+1
+        except ValueError:
+            self.sno = 1
+        
 
     def add(self,amount:float, category:str, date:str = currentDate):
         """Adds the details of expense in the expense list taking amt, cat and date as argument"""
         self._expenses[self.sno] = [amount, category,date]
-        self.sno += 1
+        self.sno +=1
         print('\nExpense Added')
     
     def remove(self,serialNo:int):
         """Removes any of the expense with serial number as argument"""
         try:
-            self._expenses.pop(serialNo)
+            self._expenses.pop(str(serialNo))
             print('\nData removed')
         except KeyError:
             print('Enter a valid input. Try again')
     
-    def replace(self,serialNo:int,amt:float, category:str, datae):
+    def replace(self,serialNo:int,amt:float, category:str, date:str = currentDate):
         """takes the serial number and the new data and replace the data entry of that serial number"""
+        self._expenses[serialNo] = [amt, category,date]
+        print('\nData Edited')
 
     def display(self):
         """Display all the _expenses in pretty manner"""
@@ -88,8 +78,9 @@ class ExpenseList():
                 print(f"{sno}".center(4," "),f"{self._expenses[sno][0]}".center(16,' '),
                       f"{self._expenses[sno][2]}".center(16,' '),
                       f"{self._expenses[sno][1]}".center(16,' '),sep="")
-                
+            print(allExpenses)
             print()
+
         else:
                 print('\nNo Data\n')
 
@@ -108,12 +99,36 @@ class ExpenseList():
 print('--- Expense Tracker: One stop solution to track and manage all your expeneses all in one place ;) ---')
 print()
 
-#decide how to define it in the class itself and how to save it also 
-currentExpenseList  = {}
+#defining the function that handle the loading and saving of the allExpenses dictionary that stor all the month wise data
+
+
+def save():
+        
+    with open('data.json','w') as file:
+        json.dump(allExpenses,file,indent=4)
+        print("--- File Saved ---")
+
+def load():
+    try:
+        with open('data.json','r') as file:
+            return json.load(file)
+    except Exception:
+        return {}
+
+
+
+allExpenses = load()#this is the dictionary with month+year as key and the expenses as the value that is all the data and dict dict
+currentMonthKey = (currentMonth+currentYear)
+
+if currentMonthKey not in allExpenses:
+    allExpenses[currentMonthKey] = {}
+
+
+currentDict  = allExpenses[currentMonthKey] #this access the current month data from the allExpenses
 
 DontExit = True
 while DontExit:
-    
+    currentExpenseList = ExpenseList(currentDict) #and this create object of that dictionary
     (currentExpenseList.display())
 
     print("--- What you wanna do? ---\n")
@@ -208,7 +223,8 @@ while DontExit:
             while NotDone:
                 try: 
                     serialNum = int(input(f'Enter Serial Number(1-{currentExpenseList.getLastsno()-1}):'))
-                    if serialNum >= 1 and serialNum <= currentExpenseList.getLastsno():
+                    
+                    if serialNum >= 1 and serialNum < currentExpenseList.getLastsno():
                         currentExpenseList.remove(serialNum)
                         NotDone = False
                     elif serialNum == 0:
