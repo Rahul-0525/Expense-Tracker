@@ -99,7 +99,7 @@ class ExpenseList():
 print('--- Expense Tracker: One stop solution to track and manage all your expeneses all in one place ;) ---')
 print()
 
-#defining the function that handle the loading and saving of the allExpenses dictionary that stor all the month wise data
+#defining the function that handle the loading and saving of the allExpenses dictionary that store all the month wise data
 
 
 def save():
