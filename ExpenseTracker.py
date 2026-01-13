@@ -70,11 +70,15 @@ class ExpenseList():
         """Display all the _expenses in pretty manner"""
         if self._expenses:
             print()
+            total = 0
             for sno in self._expenses:
                 print(f"{sno}".center(4," "),f"{self._expenses[sno][0]}".center(16,' '),
                       f"{self._expenses[sno][2]}".center(16,' '),
                       f"{self._expenses[sno][1]}".center(16,' '),sep="")
-            print(allExpenses)
+                total += self._expenses[sno][0]
+            print("-"*52)
+            print("Total spending: ",str(total).center(36," "),sep='')
+
             print()
 
         else:
@@ -110,6 +114,16 @@ def load():
             return json.load(file)
     except Exception:
         return {}
+    
+#defining function to switch the dictionary in the ExpenseList class
+
+def switchDictTo(currentMonthKey:str) -> ExpenseList:
+    '''creates a intance of ExpenseList for different dictionary according to the currentMonthKey'''
+    if currentMonthKey not in allExpenses:
+        allExpenses[currentMonthKey] = {}
+    currentDict  = allExpenses[currentMonthKey] #this access the current month data from the allExpenses
+    return ExpenseList(currentDict)
+
 
 
 
@@ -130,17 +144,11 @@ while DontExit:
         if not month and not year:
 
             currentMonthKey = (currentMonth+currentYear)
-            if currentMonthKey not in allExpenses:
-                allExpenses[currentMonthKey] = {}
-            currentDict  = allExpenses[currentMonthKey] #this access the current month data from the allExpenses
-            currentExpenseList = ExpenseList(currentDict) #and this create object of that dictionary
+            currentExpenseList = switchDictTo(currentMonthKey)
 
         elif (int(month)>=1 and int(month)<=12) and (int(year) >=1900 and int(year)<= int(currentYear)):
             currentMonthKey = (month+year)
-            if currentMonthKey not in allExpenses:
-                allExpenses[currentMonthKey] = {}
-            currentDict  = allExpenses[currentMonthKey] #this access the current month data from the allExpenses
-            currentExpenseList = ExpenseList(currentDict) #and this create object of that dictionary
+            currentExpenseList = switchDictTo(currentMonthKey) #and this create object of that dictionary
 
 
         else:
@@ -160,9 +168,9 @@ while DontExit:
         print("--- What you wanna do? ---\n")
         print('1. Add New Expense data')
         print('2. Remove any Expense data')
+        print('3. Display your all Expenses')
         print('4. Switch to other Month Expenses')
-        print('5. Display your all Expense data')
-        print('6. Exit')
+        print('5. Exit')
         print()
 
         userinp = input('Enter (1/2/3/4/5): ')
@@ -260,10 +268,7 @@ while DontExit:
                                 currentExpenseList.add(amt,category,ofToday)
                             else:
                                 currentMonthKey= getMonthkey(ofToday)
-                                if currentMonthKey not in allExpenses:
-                                    allExpenses[currentMonthKey] = {}
-                                currentDict = allExpenses[currentMonthKey]
-                                currentExpenseList = ExpenseList(currentDict)
+                                currentExpenseList = switchDictTo(currentMonthKey)
                                 currentExpenseList.add(amt,category,ofToday)
                                 currentExpenseList.display()
                                 
@@ -292,15 +297,15 @@ while DontExit:
                     except ValueError:
                         print('Enter a valid input. Try again')
 
+            case '3':
+                print("--- Your All Month Expenses ---""")
+            
 
             case '4':
                 noMonthSwitch = False
 
-            case '5':
-                print("--- Your This month's Expenses ---""")
-            
 
-            case '6':
+            case '5':
                 print("--- Saving Your Data ---")
                 save()
                 time.sleep(5)
