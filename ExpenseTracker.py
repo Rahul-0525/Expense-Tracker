@@ -321,6 +321,9 @@ while DontExit:
                 noMonthSwitch = False
                 DontExit = False
 
+            case _ :
+                print("Enter a valid input. Try again ;}")
+
         
 
 
