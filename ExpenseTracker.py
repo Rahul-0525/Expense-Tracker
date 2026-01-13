@@ -1,18 +1,23 @@
 '''
 ToDo:
 
-1. Create MonthlyExpenseList class: which will initialise the expense list which is basically a dictionary with serial 
-number as the key and list of expense, category and date(default date is of today)
+
 2. different MonthlyExpenseList object are created for different months automatically to part different months
 3. Where the class allow adding, removing expenses, or edit any expenses amount, date or category by serial number
 4. initially get current date and create a dictionary which holds the expenselist object as value and month and year as the key
 
+changes: expenselist now will recieve a dictionary which will be a single month data and will have a method to return it which a function
+named save will receive add it in the universal dictionary which is dictionary of dictionaries of month and update it 
+and dump it and when this universal dictionary is loaded the dictionary of required month is created or taken from it and 
+created into a expenselist object there exists only one object at a time action happen on it and then it get replaced by other 
+expense list of another month
 '''
 
 #accessing the current date
 from datetime import date
 import datetime
 import time
+import json
 # today = str(date.today()).split('-')
 # print(today)
 currentMonth = date.today().strftime('%m')
@@ -22,7 +27,21 @@ currentDay = date.today().strftime('%d')
 currentDate = date.today().strftime('%d.%m.%Y')
 # print(currentDate)
 
-allExpenses = {} #store expense list month wise
+#defining the function that handle the loading and saving of the allExpenses dictionary that stor all the month wise data
+
+def save():
+    with open('data.json','w') as file:
+        json.dump(allExpenses,file,indent=4)
+
+def load():
+    try:
+        with open('data.json', 'r') as file:
+            d = json.load(file)
+            return d
+    except Exception:
+        return {}
+
+allExpenses = load() #store expense list month wise
 
 
 
@@ -37,7 +56,7 @@ class NegativeSpend(Exception):
 
 class ExpenseList():
     '''
-    Defines and handle all the methods of the Expense list
+    Defines and handle all the methods of the Expense list which represent expenses of a single month only
     '''
 
     def __init__(self):
@@ -76,12 +95,12 @@ class ExpenseList():
 
     def getLastsno(self) -> int:
         return self.sno
+    
+    def getMonthlydata(self):
+        return self._expenses
 
 
-#this creates a new expense list object for each month if not exist already 
-currentMonthDataKey = currentMonth+currentYear
-if currentMonthDataKey not in allExpenses:
-    allExpenses[currentMonthDataKey] = ExpenseList()
+
 
 #Below is the userinterface for all the operations of  the expense list
 
@@ -89,7 +108,8 @@ if currentMonthDataKey not in allExpenses:
 print('--- Expense Tracker: One stop solution to track and manage all your expeneses all in one place ;) ---')
 print()
 
-currentExpenseList = allExpenses[currentMonthDataKey]
+#decide how to define it in the class itself and how to save it also 
+currentExpenseList  = {}
 
 DontExit = True
 while DontExit:
@@ -200,105 +220,17 @@ while DontExit:
                 except ValueError:
                     print('Enter a valid input. Try again')
 
-        case '3':
-            print('--- Enter the serial number to edit or 0 to exit ---')
-            NotDone = True
-            while NotDone:
-                try: 
-                    serialNum = int(input(f'Enter Serial Number(1-{currentExpenseList.getLastsno()-1}):'))
-                    if serialNum >= 1 and serialNum <= currentExpenseList.getLastsno():
-                            NotDone = True
-                            while NotDone:
-                                try:
-                                    amt = float(input("Enter the amount of the Expense: "))
-                                    if amt<0:
-                                        raise NegativeSpend(amt)
-                                    NotDone = False
-                                except ValueError:
-                                    print('Enter a valid input. Try again')
-                                except NegativeSpend as err:
-                                    print(err)
-
-                            NotDone = True
-                            while NotDone:
-                                categories = [
-                                                "Housing",
-                                                "Utilities",
-                                                "Food & Dining",
-                                                "Transport",
-                                                "Health",
-                                                "Entertainment",
-                                                "Shopping",
-                                                "Debt & Loans",
-                                                "Education",
-                                                "Gifts & Donations",
-                                                "Insurance",
-                                                "Miscellaneous"
-                                            ]
-                                print('\n--- Choose the Category of the expense ---')
-                                print('1. Housing: Rent/Mortgage, property tax, home insurance.')
-                                print('2. Utilities: Electricity, water, gas, internet, phone bill.')
-                                print('3. Food & Dining: Groceries, restaurants, coffee shops, takeout.')
-                                print('4. Transport: Fuel, public transit, car maintenance, Uber/Lyft.')
-                                print('5. Health: Health insurance, pharmacy, doctor visits, gym.')
-                                print('6. Entertainment: Streaming services, movies, hobbies, gaming.')
-                                print('7. Shopping: Clothes, electronics, home decor, personal care.')
-                                print('8. Debt & Loans: Credit card payments, student loans, personal loans.')
-                                print('9. Education: Books, online courses, tuition, certifications.')
-                                print('10. Gifts & Donations: Birthdays, holiday gifts, charity, tithes.')
-                                print('11. Insurance: Car, life, or disability insurance (if not in Housing).')
-                                print('12. Miscellaneous: Emergency costs, repairs, or one-off expenses.\n')
-
-                                cat = (input("Enter the Category of the Expenses: "))
-                                if cat.strip() in list(map(str,list(range(1,13)))):
-                                    category = categories[int(cat)-1]
-                                    NotDone = False
-                                else:
-                                    print("Enter a valid input. Try again.")
-
-                            
-
-                            def isdatecorrect(date:str) -> bool:
-                                try:
-                                    datetime.datetime.strptime(date, '%d.%m.%Y')
-                                    return True
-                                except ValueError:
-                                    return False
-                                
-                            NotDone = True   
-                            while NotDone:
-                                print('\n--- If the expense is of today Press Enter/ Otherwise Enter the date (dd.mm.yyyy) ---')
-                                ofToday = input('Press Enter/ dd.mm.yyyy: ')
-                                if not ofToday:
-                                    currentExpenseList.replace(serialNum,amt,category)
-                                    NotDone = False
-                                
-                                else:
-                                    if isdatecorrect(ofToday):
-                                        currentExpenseList.replace(serialNum,amt,category,ofToday)
-                                        NotDone = False
-                                    
-                                    else:
-                                        print('Enter Valid date in correct format dd.mm.yyyy. Try again')
-                                        NotDone = False
-                    elif serialNum == 0:
-                        print('Nothing changed.')
-                        NotDone = False
-                    else:
-                        raise ValueError('Invalid input')
-                
-                except ValueError:
-                    print('Enter a valid input. Try again')
-
-
         case '4':
             print("--- Your This month's Expenses ---""")
         
 
         case '5':
             print("--- Saving Your Data ---")
+            save()
             time.sleep(5)
             DontExit = False
+
+        
 
 
 
