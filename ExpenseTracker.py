@@ -118,16 +118,13 @@ def load():
 
 
 allExpenses = load()#this is the dictionary with month+year as key and the expenses as the value that is all the data and dict dict
-currentMonthKey = (currentMonth+currentYear)
-
-if currentMonthKey not in allExpenses:
-    allExpenses[currentMonthKey] = {}
-
-
-currentDict  = allExpenses[currentMonthKey] #this access the current month data from the allExpenses
 
 DontExit = True
 while DontExit:
+    currentMonthKey = (currentMonth+currentYear)
+    if currentMonthKey not in allExpenses:
+        allExpenses[currentMonthKey] = {}
+    currentDict  = allExpenses[currentMonthKey] #this access the current month data from the allExpenses
     currentExpenseList = ExpenseList(currentDict) #and this create object of that dictionary
     (currentExpenseList.display())
 
@@ -200,6 +197,25 @@ while DontExit:
                     return True
                 except ValueError:
                     return False
+            
+            def iscurrentmonth(date:str) -> bool:
+                
+                d = datetime.datetime.strptime(date,'%d.%m.%Y')
+                month = d.strftime('%m')
+                if str(currentMonth) == str(month):
+                    return True
+                else:
+                    return False
+            
+            def getMonthkey(date:str) -> str:
+                d = datetime.datetime.strptime(date,'%d.%m.%Y')
+                month = d.strftime('%m')
+                year = d.strftime('%Y')
+                return str(month)+str(year)
+
+                
+
+
                 
             NotDone = True   
             while NotDone:
@@ -211,7 +227,17 @@ while DontExit:
                 
                 else:
                     if isdatecorrect(ofToday):
-                        currentExpenseList.add(amt,category,ofToday)
+                        if iscurrentmonth(ofToday):
+                            currentExpenseList.add(amt,category,ofToday)
+                        else:
+                            currentMonthKey= getMonthkey(ofToday)
+                            if currentMonthKey not in allExpenses:
+                                allExpenses[currentMonthKey] = {}
+                            currentDict = allExpenses[currentMonthKey]
+                            currentExpenseList = ExpenseList(currentDict)
+                            currentExpenseList.add(amt,category,ofToday)
+                            currentExpenseList.display()
+
                         NotDone = False
                     
                     else:
