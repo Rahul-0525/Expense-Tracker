@@ -26,6 +26,22 @@ currentDay = date.today().strftime('%d')
 currentDate = date.today().strftime('%d.%m.%Y')
 # print(currentDate)
 
+#all the categories of the expenses:
+
+categories = [
+            "Housing",
+            "Utilities",
+            "Food & Dining",
+            "Transport",
+            "Health",
+            "Entertainment",
+            "Shopping",
+            "Debt & Loans",
+            "Education",
+            "Gifts & Donations",
+            "Insurance",
+            "Miscellaneous"
+        ]
 
 
 
@@ -77,7 +93,7 @@ class ExpenseList():
                       f"{self._expenses[sno][1]}".center(16,' '),sep="")
                 total += self._expenses[sno][0]
             print("-"*52)
-            print("Total spending: ",str(total).center(36," "),sep='')
+            print("Total spending: ",f"{total:.2f}".center(36," "),sep='')
 
             print()
 
@@ -191,20 +207,6 @@ while DontExit:
 
                 NotDone = True
                 while NotDone:
-                    categories = [
-                                    "Housing",
-                                    "Utilities",
-                                    "Food & Dining",
-                                    "Transport",
-                                    "Health",
-                                    "Entertainment",
-                                    "Shopping",
-                                    "Debt & Loans",
-                                    "Education",
-                                    "Gifts & Donations",
-                                    "Insurance",
-                                    "Miscellaneous"
-                                ]
                     print('\n--- Choose the Category of the expense ---')
                     print('1. Housing: Rent/Mortgage, property tax, home insurance.')
                     print('2. Utilities: Electricity, water, gas, internet, phone bill.')
