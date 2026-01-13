@@ -150,25 +150,25 @@ while DontExit:
             currentMonthKey = (month+year)
             currentExpenseList = switchDictTo(currentMonthKey) #and this create object of that dictionary
 
-
         else:
             print('Enter a valid input. Try again')
             continue
+
     except ValueError:
-        print('Enter a valid input.Value Error. Try again')
+        print('Enter a valid input. Value Error. Try again')
         continue
 
     noMonthSwitch = True
 
     while noMonthSwitch:
 
-
+        print('\n\n--- Working Dashboard ---')
         (currentExpenseList.display())
 
         print("--- What you wanna do? ---\n")
         print('1. Add New Expense data')
         print('2. Remove any Expense data')
-        print('3. Display your all Expenses')
+        print('3. Display your all Monthly Expenses')
         print('4. Switch to other Month Expenses')
         print('5. Exit')
         print()
@@ -298,7 +298,16 @@ while DontExit:
                         print('Enter a valid input. Try again')
 
             case '3':
+                print()
+                print('-'*60)
+                print()
                 print("--- Your All Month Expenses ---""")
+                for key in allExpenses:
+                    currentExpenseList = switchDictTo(key)
+                    currentExpenseList.display()
+                print()
+                print('-'*60)
+                currentExpenseList = switchDictTo(currentMonthKey)
             
 
             case '4':
