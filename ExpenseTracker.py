@@ -65,10 +65,6 @@ class ExpenseList():
         except KeyError:
             print('Enter a valid input. Try again')
     
-    def replace(self,serialNo:int,amt:float, category:str, date:str = currentDate):
-        """takes the serial number and the new data and replace the data entry of that serial number"""
-        self._expenses[serialNo] = [amt, category,date]
-        print('\nData Edited')
 
     def display(self):
         """Display all the _expenses in pretty manner"""
@@ -121,156 +117,195 @@ allExpenses = load()#this is the dictionary with month+year as key and the expen
 
 DontExit = True
 while DontExit:
-    currentMonthKey = (currentMonth+currentYear)
-    if currentMonthKey not in allExpenses:
-        allExpenses[currentMonthKey] = {}
-    currentDict  = allExpenses[currentMonthKey] #this access the current month data from the allExpenses
-    currentExpenseList = ExpenseList(currentDict) #and this create object of that dictionary
-    (currentExpenseList.display())
 
-    print("--- What you wanna do? ---\n")
-    print('1. Add New Expense data')
-    print('2. Remove any Expense data')
-    print('3. Edit any Expense data')
-    print('4. Display your all Expense data')
-    print('5. Exit')
+
+    print("--- Choose the Month and the Year of the Expenses ---")
     print()
+    print("--- Press Enter in both month and year if want to acess the current month ---")
+    month = input("Enter month(mm)/ Press Enter: ")
+    year = input("Enter Year(yyyy)/ Press Enter: ")
+    
 
-    userinp = input('Enter (1/2/3/4/5): ')
-    print()
-    match userinp:
-        case '1':
-            NotDone = True
-            while NotDone:
-                try:
-                    amt = float(input("Enter the amount of the Expense: "))
-                    if amt<0:
-                        raise NegativeSpend(amt)
-                    NotDone = False
-                except ValueError:
-                    print('Enter a valid input. Try again')
-                except NegativeSpend as err:
-                    print(err)
+    try:
+        if not month and not year:
 
-            NotDone = True
-            while NotDone:
-                categories = [
-                                "Housing",
-                                "Utilities",
-                                "Food & Dining",
-                                "Transport",
-                                "Health",
-                                "Entertainment",
-                                "Shopping",
-                                "Debt & Loans",
-                                "Education",
-                                "Gifts & Donations",
-                                "Insurance",
-                                "Miscellaneous"
-                            ]
-                print('\n--- Choose the Category of the expense ---')
-                print('1. Housing: Rent/Mortgage, property tax, home insurance.')
-                print('2. Utilities: Electricity, water, gas, internet, phone bill.')
-                print('3. Food & Dining: Groceries, restaurants, coffee shops, takeout.')
-                print('4. Transport: Fuel, public transit, car maintenance, Uber/Lyft.')
-                print('5. Health: Health insurance, pharmacy, doctor visits, gym.')
-                print('6. Entertainment: Streaming services, movies, hobbies, gaming.')
-                print('7. Shopping: Clothes, electronics, home decor, personal care.')
-                print('8. Debt & Loans: Credit card payments, student loans, personal loans.')
-                print('9. Education: Books, online courses, tuition, certifications.')
-                print('10. Gifts & Donations: Birthdays, holiday gifts, charity, tithes.')
-                print('11. Insurance: Car, life, or disability insurance (if not in Housing).')
-                print('12. Miscellaneous: Emergency costs, repairs, or one-off expenses.\n')
+            currentMonthKey = (currentMonth+currentYear)
+            if currentMonthKey not in allExpenses:
+                allExpenses[currentMonthKey] = {}
+            currentDict  = allExpenses[currentMonthKey] #this access the current month data from the allExpenses
+            currentExpenseList = ExpenseList(currentDict) #and this create object of that dictionary
 
-                cat = (input("Enter the Category of the Expenses: "))
-                if cat.strip() in list(map(str,list(range(1,13)))):
-                    category = categories[int(cat)-1]
-                    NotDone = False
-                else:
-                    print("Enter a valid input. Try again.")
+        elif (int(month)>=1 and int(month)<=12) and (int(year) >=1900 and int(year)<= int(currentYear)):
+            currentMonthKey = (month+year)
+            if currentMonthKey not in allExpenses:
+                allExpenses[currentMonthKey] = {}
+            currentDict  = allExpenses[currentMonthKey] #this access the current month data from the allExpenses
+            currentExpenseList = ExpenseList(currentDict) #and this create object of that dictionary
 
-            
 
-            def isdatecorrect(date:str) -> bool:
-                try:
-                    datetime.datetime.strptime(date, '%d.%m.%Y')
-                    return True
-                except ValueError:
-                    return False
-            
-            def iscurrentmonth(date:str) -> bool:
+        else:
+            print('Enter a valid input. Try again')
+            continue
+    except ValueError:
+        print('Enter a valid input.Value Error. Try again')
+        continue
+
+    noMonthSwitch = True
+
+    while noMonthSwitch:
+
+
+        (currentExpenseList.display())
+
+        print("--- What you wanna do? ---\n")
+        print('1. Add New Expense data')
+        print('2. Remove any Expense data')
+        print('4. Switch to other Month Expenses')
+        print('5. Display your all Expense data')
+        print('6. Exit')
+        print()
+
+        userinp = input('Enter (1/2/3/4/5): ')
+        print()
+        match userinp:
+            case '1':
+                NotDone = True
+                while NotDone:
+                    try:
+                        amt = float(input("Enter the amount of the Expense: "))
+                        if amt<0:
+                            raise NegativeSpend(amt)
+                        NotDone = False
+                    except ValueError:
+                        print('Enter a valid input. Try again')
+                    except NegativeSpend as err:
+                        print(err)
+
+                NotDone = True
+                while NotDone:
+                    categories = [
+                                    "Housing",
+                                    "Utilities",
+                                    "Food & Dining",
+                                    "Transport",
+                                    "Health",
+                                    "Entertainment",
+                                    "Shopping",
+                                    "Debt & Loans",
+                                    "Education",
+                                    "Gifts & Donations",
+                                    "Insurance",
+                                    "Miscellaneous"
+                                ]
+                    print('\n--- Choose the Category of the expense ---')
+                    print('1. Housing: Rent/Mortgage, property tax, home insurance.')
+                    print('2. Utilities: Electricity, water, gas, internet, phone bill.')
+                    print('3. Food & Dining: Groceries, restaurants, coffee shops, takeout.')
+                    print('4. Transport: Fuel, public transit, car maintenance, Uber/Lyft.')
+                    print('5. Health: Health insurance, pharmacy, doctor visits, gym.')
+                    print('6. Entertainment: Streaming services, movies, hobbies, gaming.')
+                    print('7. Shopping: Clothes, electronics, home decor, personal care.')
+                    print('8. Debt & Loans: Credit card payments, student loans, personal loans.')
+                    print('9. Education: Books, online courses, tuition, certifications.')
+                    print('10. Gifts & Donations: Birthdays, holiday gifts, charity, tithes.')
+                    print('11. Insurance: Car, life, or disability insurance (if not in Housing).')
+                    print('12. Miscellaneous: Emergency costs, repairs, or one-off expenses.\n')
+
+                    cat = (input("Enter the Category of the Expenses: "))
+                    if cat.strip() in list(map(str,list(range(1,13)))):
+                        category = categories[int(cat)-1]
+                        NotDone = False
+                    else:
+                        print("Enter a valid input. Try again.")
+
                 
-                d = datetime.datetime.strptime(date,'%d.%m.%Y')
-                month = d.strftime('%m')
-                if str(currentMonth) == str(month):
-                    return True
-                else:
-                    return False
-            
-            def getMonthkey(date:str) -> str:
-                d = datetime.datetime.strptime(date,'%d.%m.%Y')
-                month = d.strftime('%m')
-                year = d.strftime('%Y')
-                return str(month)+str(year)
 
+                def isdatecorrect(date:str) -> bool:
+                    try:
+                        datetime.datetime.strptime(date, '%d.%m.%Y')
+                        return True
+                    except ValueError:
+                        return False
                 
+                def iscurrentmonth(date:str) -> bool:
+                    
+                    d = datetime.datetime.strptime(date,'%d.%m.%Y')
+                    month = d.strftime('%m')
+                    if str(currentMonth) == str(month):
+                        return True
+                    else:
+                        return False
+                
+                def getMonthkey(date:str) -> str:
+                    d = datetime.datetime.strptime(date,'%d.%m.%Y')
+                    month = d.strftime('%m')
+                    year = d.strftime('%Y')
+                    return str(month)+str(year)
+
+                    
 
 
-                
-            NotDone = True   
-            while NotDone:
-                print('\n--- If the expense is of today Press Enter/ Otherwise Enter the date (dd.mm.yyyy) ---')
-                ofToday = input('Press Enter/ dd.mm.yyyy: ')
-                if not ofToday:
-                    currentExpenseList.add(amt,category)
-                    NotDone = False
-                
-                else:
-                    if isdatecorrect(ofToday):
-                        if iscurrentmonth(ofToday):
-                            currentExpenseList.add(amt,category,ofToday)
+                    
+                NotDone = True   
+                while NotDone:
+                    print('\n--- If the expense is of today Press Enter/ Otherwise Enter the date (dd.mm.yyyy) ---')
+                    ofToday = input('Press Enter/ dd.mm.yyyy: ')
+                    if not ofToday:
+                        currentExpenseList.add(amt,category)
+                        NotDone = False
+                    
+                    else:
+                        if isdatecorrect(ofToday):
+                            if iscurrentmonth(ofToday):
+                                currentExpenseList.add(amt,category,ofToday)
+                            else:
+                                currentMonthKey= getMonthkey(ofToday)
+                                if currentMonthKey not in allExpenses:
+                                    allExpenses[currentMonthKey] = {}
+                                currentDict = allExpenses[currentMonthKey]
+                                currentExpenseList = ExpenseList(currentDict)
+                                currentExpenseList.add(amt,category,ofToday)
+                                currentExpenseList.display()
+                                
+
+                            NotDone = False
+                        
                         else:
-                            currentMonthKey= getMonthkey(ofToday)
-                            if currentMonthKey not in allExpenses:
-                                allExpenses[currentMonthKey] = {}
-                            currentDict = allExpenses[currentMonthKey]
-                            currentExpenseList = ExpenseList(currentDict)
-                            currentExpenseList.add(amt,category,ofToday)
-                            currentExpenseList.display()
-
-                        NotDone = False
+                            print('Enter Valid date in correct format dd.mm.yyyy. Try again')
                     
-                    else:
-                        print('Enter Valid date in correct format dd.mm.yyyy. Try again')
-                
-        case '2' :
-            print('--- Enter the serial number to remove or 0 to exit ---')
-            NotDone = True
-            while NotDone:
-                try: 
-                    serialNum = int(input(f'Enter Serial Number(1-{currentExpenseList.getLastsno()-1}):'))
+            case '2' :
+                print('--- Enter the serial number to remove or 0 to exit ---')
+                NotDone = True
+                while NotDone:
+                    try: 
+                        serialNum = int(input(f'Enter Serial Number(1-{currentExpenseList.getLastsno()-1}):'))
+                        
+                        if serialNum >= 1 and serialNum < currentExpenseList.getLastsno():
+                            currentExpenseList.remove(serialNum)
+                            NotDone = False
+                        elif serialNum == 0:
+                            print('Nothing changed.')
+                            NotDone = False
+                        else:
+                            raise ValueError('Invalid input')
                     
-                    if serialNum >= 1 and serialNum < currentExpenseList.getLastsno():
-                        currentExpenseList.remove(serialNum)
-                        NotDone = False
-                    elif serialNum == 0:
-                        print('Nothing changed.')
-                        NotDone = False
-                    else:
-                        raise ValueError('Invalid input')
-                
-                except ValueError:
-                    print('Enter a valid input. Try again')
+                    except ValueError:
+                        print('Enter a valid input. Try again')
 
-        case '4':
-            print("--- Your This month's Expenses ---""")
-        
 
-        case '5':
-            print("--- Saving Your Data ---")
-            save()
-            time.sleep(5)
-            DontExit = False
+            case '4':
+                noMonthSwitch = False
+
+            case '5':
+                print("--- Your This month's Expenses ---""")
+            
+
+            case '6':
+                print("--- Saving Your Data ---")
+                save()
+                time.sleep(5)
+                noMonthSwitch = False
+                DontExit = False
 
         
 
