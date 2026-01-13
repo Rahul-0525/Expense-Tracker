@@ -5,7 +5,7 @@ The project was built to explore object-oriented design, modularity, persistence
 
 ## What this project does
 
-This program allows a user to:
+This program allows a user to:<br>
 • Add expenses with amount, category, and date <br>
 • Automatically organize expenses by month and year<br>
 • Switch between different months<br>
@@ -50,7 +50,7 @@ The project contains:<br>
 
 ## What this project demonstrates
 
-This project was built to practice:
+This project was built to practice:<br>
 • OOP design<br>
 • Exception handling<br>
 • File handling<br>
@@ -62,7 +62,7 @@ This project was built to practice:
 ---
 
 ## Technologies used
-
+<br>
 • Python 3<br>
 • Object-oriented programming<br>
 • JSON for file storage<br>
